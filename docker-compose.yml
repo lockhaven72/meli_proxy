@@ -1,0 +1,50 @@
+version: '3.5'
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8080
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - '8080:8080'
+    environment:
+      - DB_USER=mercadolibre
+      - DB_PASSWORD=proxy
+      - MAX_USER_REQUESTS=5
+      - MAX_ENDPOINT_REQUESTS=5
+      - MAX_USER_ENDPOINT_REQUESTS=5
+      - DJANGO_SECRET_KEY=")bolt%5q&bosg=xi^n^$$(-vey-m38^2m5f1ay%n5)b0ezi^0tv"
+      - MERCADOLIBRE_API=https://api.mercadolibre.com
+    depends_on:
+      - db
+
+  db:
+    container_name: postgres
+    image: postgres
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_DB=meli_proxy
+      - POSTGRES_USER=mercadolibre
+      - POSTGRES_PASSWORD=proxy
+
+  prometheus:
+    container_name: metrics_tool
+    image: prom/prometheus:v2.25.0
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./data/prometheus/data:/prometheus
+    command: 
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - 9090:9090
+
+  grafana:
+    container_name: monitoring_tool
+    image: grafana/grafana
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+      - ./grafana/provisioning/:/etc/grafana/provisioning/
+    ports:
+      - "3000:3000"
+    restart: always
