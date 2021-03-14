@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: meli-proxy-metrics-service
+spec:
+  selector:
+    app: meli-proxy-metrics
+  type: NodePort
+  ports:
+  - port: 9090
+    targetPort: 9090
