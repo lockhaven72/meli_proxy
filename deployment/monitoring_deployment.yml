@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meli-proxy-monitoring-deployment
+spec:
+  selector:
+    matchLabels:
+      app: meli-proxy-monitoring
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: meli-proxy-monitoring
+    spec:
+      containers:
+      - name: grafana
+        image: grafana/grafana
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "256m"
+        ports:
+        - containerPort: 3000
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 15
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 3
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/grafana
+        - name: dashboards
+          mountPath: /etc/grafana/provisioning/
+      volumes:
+      - name: data
+        emptyDir: {}
+      - name: dashboards
+        emptyDir: {}

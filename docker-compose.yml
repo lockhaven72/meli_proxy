@@ -32,7 +32,7 @@ services:
     container_name: metrics_tool
     image: prom/prometheus:v2.25.0
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./deployment/prometheus.yml:/etc/prometheus/prometheus.yml
       - ./data/prometheus/data:/prometheus
     command: 
       - '--config.file=/etc/prometheus/prometheus.yml'

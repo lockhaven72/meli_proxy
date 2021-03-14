@@ -18,5 +18,5 @@ from django.urls import include, path, re_path
 
 urlpatterns = [
     path('', include("django_prometheus.urls"), name="django-prometheus"),
-    re_path(r'^(?!metrics).*\/', include('proxy_app.urls')),
+    re_path(r'^(?!metrics).*\/', include('proxy_app.urls'))
 ]

@@ -14,8 +14,10 @@ dispatcher = {
     'OPTIONS': requests.options,
 }
 
-def proxy(request):
+def forward(request):
     redirect_url = os.getenv('MERCADOLIBRE_API', os.environ['MERCADOLIBRE_API'])+request.get_full_path()
+    if request.path == '/health/':
+        return HttpResponse(content="Alive", status=200)
     try:
         bearer_token = request.headers['Authorization']
         response = dispatcher[request.method](url=redirect_url, headers={'Authorization':f'{bearer_token}', 'Content-Type': 'application/json'})

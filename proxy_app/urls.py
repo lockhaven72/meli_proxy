@@ -3,5 +3,5 @@ from django.conf.urls import include
 from . import views
 
 urlpatterns = [
-    path('', views.proxy, name='proxy'),
+    path('', views.forward, name='forward'),
 ]

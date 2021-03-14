@@ -7,7 +7,7 @@ class TokenChecker:
 
     def __call__(self, request):
         # Pre validation in request
-        if request.path != '/metrics':
+        if request.path not in ['/metrics', '/health/']:
             try:
                 self.check_bearer_token(request)
             except Exception:

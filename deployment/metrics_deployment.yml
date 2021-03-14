@@ -1,0 +1,49 @@
+# deployment of metrics tool
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meli-proxy-metrics-deployment
+spec:
+  selector:
+    matchLabels:
+      app: meli-proxy-metrics
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: meli-proxy-metrics
+    spec:
+      containers:
+      - name: prometheus
+        image: prom/prometheus:v2.25.0
+        resources:
+          limits:
+            memory: "1000Mi"
+            cpu: "1"
+        ports:
+        - containerPort: 9090
+        livenessProbe:
+          httpGet:
+            path: /-/healthy
+            port: 9090
+          initialDelaySeconds: 15
+          periodSeconds: 15
+        readinessProbe:
+          httpGet:
+            path: /-/healthy
+            port: 9090
+          initialDelaySeconds: 15
+          periodSeconds: 3
+        args:
+        - --config.file=/etc/prometheus/prometheus.yml
+        volumeMounts:
+        - name:  config
+          mountPath: /etc/prometheus
+        - name: data
+          mountPath: /prometheus
+      volumes:
+      - name: data
+        emptyDir: {}
+      - configMap:
+          name: meli-proxy-metrics-configmap
+        name: config
