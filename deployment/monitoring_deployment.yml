@@ -21,6 +21,18 @@ spec:
             cpu: "256m"
         ports:
         - containerPort: 3000
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 15
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 3
         volumeMounts:
         - name: data
           mountPath: /var/lib/grafana

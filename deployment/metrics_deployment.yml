@@ -18,10 +18,22 @@ spec:
         image: prom/prometheus:v2.25.0
         resources:
           limits:
-            memory: "128Mi"
-            cpu: "256m"
+            memory: "1000Mi"
+            cpu: "1"
         ports:
         - containerPort: 9090
+        livenessProbe:
+          httpGet:
+            path: /-/healthy
+            port: 9090
+          initialDelaySeconds: 15
+          periodSeconds: 15
+        readinessProbe:
+          httpGet:
+            path: /-/healthy
+            port: 9090
+          initialDelaySeconds: 15
+          periodSeconds: 3
         args:
         - --config.file=/etc/prometheus/prometheus.yml
         volumeMounts:

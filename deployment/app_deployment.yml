@@ -17,11 +17,26 @@ spec:
       - name: meli-proxy
         image: lockhaven72/meli-proxy:latest
         resources:
+          requests:
+            memory: "100Mi"
+            cpu: "200m"
           limits:
-            memory: "128Mi"
-            cpu: "128m"
+            memory: "1Gi"
+            cpu: "1"
         ports:
         - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 15
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 3
         env:
         - name: DB_HOST
           value: meli-proxy-db-service.default
@@ -41,3 +56,10 @@ spec:
           value: ")bolt%5q&bosg=xi^n^$$(-vey-m38^2m5f1ay%n5)b0ezi^0tv"
         - name: MERCADOLIBRE_API
           value: https://api.mercadolibre.com
+        volumeMounts:
+        - name:  db-migration
+          mountPath:  ./migrations
+      volumes:
+      - name:  db-migration
+        persistentVolumeClaim:
+          claimName: meli-proxy-pvc

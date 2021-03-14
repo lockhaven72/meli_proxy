@@ -29,3 +29,10 @@ spec:
             value: mercadolibre
           - name: POSTGRES_PASSWORD
             value: proxy
+        volumeMounts:
+        - name:  db-migration
+          mountPath:  /migrations
+      volumes:
+      - name:  db-migration
+        persistentVolumeClaim:
+          claimName: meli-proxy-pvc

@@ -9,8 +9,11 @@ Commands required to run whole application:
 
 Grafana
 http://localhost:3000/
-Para la config - http://prometheus:9090
+To config - http://prometheus:9090
 
 Prometheus
 http://localhost:9090/
 
+Local resources (Docker Desktop):
+- CPUs: 2
+- Memory: 2 GB
