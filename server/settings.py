@@ -26,7 +26,7 @@ SECRET_KEY = 'os.getenv('DJANGO_SECRET_KEY',os.environ['DJANGO_SECRET_KEY'])'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'web', 'db', 'prometheus', 'grafana']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
