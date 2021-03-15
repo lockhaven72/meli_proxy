@@ -23,6 +23,8 @@ A proxy is required to forward the internal requests into MercadoLibre's API, wi
 
 - The application's image has been pushed into DockerHub: https://hub.docker.com/repository/docker/lockhaven72/meli-proxy
 
+- A token generator script has been added to append in the requests against Mercadolibre's API. Add this token as part of the Authorization header (Bearer Token type).
+
 ## Running the application
 
 ### Running the application with k8s
