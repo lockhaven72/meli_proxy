@@ -5,7 +5,6 @@ metadata:
 spec:
   selector:
     app: meli-proxy
-  type: NodePort
   ports:
-  - port: 8080  # Service's out port. The connection is done using the  
+  - port: 80  # Service's out port. The connection is done using the  
     targetPort: 8080 # app's target port

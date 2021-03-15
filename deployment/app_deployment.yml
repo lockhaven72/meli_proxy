@@ -25,18 +25,18 @@ spec:
             cpu: "1"
         ports:
         - containerPort: 8080
-        livenessProbe:
-          httpGet:
-            path: /health/
-            port: 8080
-          initialDelaySeconds: 15
-          periodSeconds: 15
-        readinessProbe:
-          httpGet:
-            path: /health/
-            port: 8080
-          initialDelaySeconds: 15
-          periodSeconds: 3
+        # livenessProbe:
+        #   httpGet:
+        #     path: /health/
+        #     port: 8080
+        #   initialDelaySeconds: 15
+        #   periodSeconds: 15
+        # readinessProbe:
+        #   httpGet:
+        #     path: /health/
+        #     port: 8080
+        #   initialDelaySeconds: 15
+        #   periodSeconds: 3
         env:
         - name: DB_HOST
           value: meli-proxy-db-service.default

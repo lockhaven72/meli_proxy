@@ -25,18 +25,33 @@ A proxy is required to forward the internal requests into MercadoLibre's API, wi
 
 ## Running the application
 
-- Running the application with k8s.
+### Running the application with k8s
 
 Taking into consideration that Docker and k8s are already installed in the Linux host machine, simply run:
 ```
 kubectl apply -f deployment/.
 ```
+
+Ingress files may fail to get applied, since the ingress controller takes a few minutes to get deployed. You can check ingress controller status by running:
+```
+kubectl get pods -n ingress-nginx   -l app.kubernetes.io/name=ingress-nginx --watch
+```
+
+Once the ingress controller it's running, reapply the failing ingress files (metrics_ingress.yml and monitoring_ingress.yml). Also, in case 'metrics-proxy' pod doesn't come up, reapply 'app_deployment.yml' file once the db is operational (see possible enhancements below).
+
+Since routing against localhost may still fail (error 502 Bad Gateway), execute a port-forwarding against the service.
+```
+kubectl port-forward svc/meli-proxy-service 8080:80
+```
+
 Bear in mind that the 'migrations' file is required by the database to create the 'userSession' table, for which you'll need to log into the main application's container and execute
 ```
 ./manage.py migrate
 ```
+In case you run into known error: ProgrammingError('relation "proxy_app_usersession" does not exist\nLINE 1: ...ed_endpoint", "proxy_app_usersession"."date" FROM "proxy_app...\n ^\n').
 
-Main application - http://localhost/<API endpoints>  
+**Access information**  
+Main application - http://localhost/<API endpoints>   - http://localhost:8080/<API endpoints> via port-forward.
 Endpoints /metrics and /health are reserved and bypassed.
 
 Grafana - http://www.meli-proxy-grafana.com
@@ -46,7 +61,7 @@ Prometheus - http://www.meli-proxy-metrics.com
 User and password by default.  
 
 
-- Running the application with docker-compose.
+### Running the application with docker-compose.
 
 Commands required to run whole application:
 ```
@@ -57,6 +72,7 @@ docker-compose run web python manage.py migrate
 docker-compose run
 ```
 
+**Access information**  
 Main application - http://localhost:8080/<API endpoints>  
 Endpoints /metrics and /health are reserved and bypassed.
 
@@ -72,7 +88,7 @@ User and password by default.
 Although 'localhost' can be assigned to access the 'meli-proxy' application, Grafana and Prometheus' access is failing since they cannot reuse the loopback address. I encountered issues while assigning 'host' and 'path' fields in each ingress files as I couldn't access each hostname. Possibly, this was a networking issue in my local setup.
 
 2 - Main application's healthprobe and readiness probe failing with 'connection refused' error messages.  
-It was possible to create these checks in both Grafana and Prometheus deployments. I haven't figured out yet the reason behind this issue in the Django application. Also, the Postgresql deployment lacks of these checks. Perhaps, a connection into the db could be applied to check its operability.
+It was possible to create these checks in both Grafana and Prometheus deployments. I haven't figured out yet the reason behind this issue in the Django application. Also, the Postgresql deployment lacks of these checks. Perhaps, a connection into the db could be applied to check its operability. These features were commented to avoid the application from launching.
 
 3 - Postgresql database initializes without models.  
 As explained before, this can be enhanced by adding an Ansible playbook that performs the whole solution implementation. A volume is attached in order to share between them the 'migrations' and 'manage.py' script files. Also, a new Postgresql image with the tables already created could be pulled in order to avoid this manual operation.
@@ -92,13 +108,16 @@ In the challenge, only pod's CPU is monitored.
 7 - Enhance bearer token generator script.  
 Although a token generator script 'token_generator.py' has been designed to obtain the bearer token, the authorization code can only be obtained manually by now, since I couldn't find a way to obtain this code in the header fields from the redirected URL.  
 
-8 - Further customization of Grafana dashboards.  
+8 - Enhance deployment order.
+Since each resource may depend on others, launching them in order and waiting until the ingress controller is deployed can be enhanced.  
+
+9 - Further customization of Grafana dashboards.  
 Only the total number of exceptions and handled requests metrics were taken into consideration, a lot more information could be viewed.
 
 ## Local test setup
 
 Docker Desktop assigned resources:
-- CPUs: 2
+- CPUs: 3
 - Memory: 2 GB
 
 ## References
