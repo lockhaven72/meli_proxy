@@ -108,7 +108,7 @@ In the challenge, only pod's CPU is monitored.
 7 - Enhance bearer token generator script.  
 Although a token generator script 'token_generator.py' has been designed to obtain the bearer token, the authorization code can only be obtained manually by now, since I couldn't find a way to obtain this code in the header fields from the redirected URL.  
 
-8 - Enhance deployment order.
+8 - Enhance deployment order.  
 Since each resource may depend on others, launching them in order and waiting until the ingress controller is deployed can be enhanced.  
 
 9 - Further customization of Grafana dashboards.  
