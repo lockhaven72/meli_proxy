@@ -69,37 +69,30 @@ User and password by default.
 ## Detected bugs and possible future enhancements
 
 1 - No access from client's network into ingress hosts (Grafana & Prometheus)  
-
 Although 'localhost' can be assigned to access the 'meli-proxy' application, Grafana and Prometheus' access is failing since they cannot reuse the loopback address. I encountered issues while assigning 'host' and 'path' fields in each ingress files as I couldn't access each hostname. Possibly, this was a networking issue in my local setup.
 
 2 - Main application's healthprobe and readiness probe failing with 'connection refused' error messages.  
-
 It was possible to create these checks in both Grafana and Prometheus deployments. I haven't figured out yet the reason behind this issue in the Django application. Also, the Postgresql deployment lacks of these checks. Perhaps, a connection into the db could be applied to check its operability.
 
 3 - Postgresql database initializes without models.  
 As explained before, this can be enhanced by adding an Ansible playbook that performs the whole solution implementation. A volume is attached in order to share between them the 'migrations' and 'manage.py' script files. Also, a new Postgresql image with the tables already created could be pulled in order to avoid this manual operation.
 
 4 - Add code testing.  
-
 Unittests can be added to improve code reliability.  
 Furthermore, Python linters could be applied to achieve PEP8 compliance, code coverage tests, code complexity evaluations and security checks through pipelines (GitHub workflows / GitLab pipelines).  
 
 5 - Add load tests.  
-
 Even though HPA (Horizontal Pod Autoscaling) has been applied based perform autoscaling operations, load tests were left out due lack of time.  
 These can be performed using JMeter and check how the solutions scales.
 
 6 - Add custom metrics to make 'meli-proxy' pods autoscale.  
-
 Autoscaling can be performed by applying custom metrics, such as the amount of requests received per container in order to increase the amount of running pods.  
 In the challenge, only pod's CPU is monitored.  
 
 7 - Enhance bearer token generator script.  
-
 Although a token generator script 'token_generator.py' has been designed to obtain the bearer token, the authorization code can only be obtained manually by now, since I couldn't find a way to obtain this code in the header fields from the redirected URL.  
 
 8 - Further customization of Grafana dashboards.  
-
 Only the total number of exceptions and handled requests metrics were taken into consideration, a lot more information could be viewed.
 
 ## Local test setup
