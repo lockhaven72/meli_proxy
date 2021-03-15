@@ -4,11 +4,11 @@
 A proxy is required to forward the internal requests into MercadoLibre's API, with autoscaling, metrics and monitoring features.  
 
 ## Architecture diagram
-
+![Architecture diagram](./documentation/architecture-diagram.jpg?raw=true)
 
 ## Design considerations
 
-- Even though I started coding the application with sockets, I decided to switch to Python's Django web framework as it can be used to handle the amount of requests that will hit the proxy (circa 50000 requests per second). Flask web framework may also be used to achieve the proxy functionality, but due to the previous reason it was left out.
+- I decided to go with Python's Django web framework as it can be used to handle the amount of requests that will hit the proxy (circa 50000 requests per second). Flask web framework may also be used to achieve the proxy functionality, but due to the previous reason it was left out.
 
 - A Postgresql dabatase is used as Django offers an ORM to facilitate the database management.  
   The database is used to count the number of requests that hit the proxy, and based on the maximum allowed requests number, the following ones get rejected (this number can be set with environment variables). This is performed through a middleware that is set in the Django's settings. However, this could be replaced by a Redis database acting as a cache, or even by an ingress controller acting as a API gateway, which can limit the amount of requests (such as Kong / Ambassador). Other alternative is managing this information in memory.
