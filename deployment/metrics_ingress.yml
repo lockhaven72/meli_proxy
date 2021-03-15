@@ -4,15 +4,17 @@ metadata:
   name: meli-proxy-metrics-ingress
   labels:
       name: meli-proxy-metrics
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: localhost
+  - host: www.meli-proxy-metrics.com
     http:
       paths:
       - pathType: Prefix
-        path: "/"
+        path: /
         backend:
           service:
             name: meli-proxy-metrics-service
             port:
-              number: 9090
+              number: 80

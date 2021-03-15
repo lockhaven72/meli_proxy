@@ -4,6 +4,8 @@ metadata:
   name: meli-proxy-ingress
   labels:
       name: meli-proxy
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
   - host: localhost

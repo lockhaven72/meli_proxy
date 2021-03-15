@@ -5,8 +5,9 @@ metadata:
 spec:
   selector:
     app: meli-proxy-monitoring
-  type: NodePort
   ports:
-  - port: 3000
-    targetPort: http
+  - name: http
+    protocol: TCP
+    port: 80
+    targetPort: 3000
   

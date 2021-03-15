@@ -4,15 +4,17 @@ metadata:
   name: meli-proxy-monitoring-ingress
   labels:
       name: meli-proxy-monitoring
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: localhost
+  - host: www.meli-proxy-grafana.com
     http:
       paths:
       - pathType: Prefix
-        path: "/"
+        path: /
         backend:
           service:
             name: meli-proxy-monitoring-service
             port:
-              number: 3000
+              number: 80
