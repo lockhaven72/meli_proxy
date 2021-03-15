@@ -8,7 +8,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: www.meli-proxy-grafana.com
+  - host: www.meli-proxy-monitoring.com
     http:
       paths:
       - pathType: Prefix
